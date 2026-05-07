@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cocoon by Sabrina – Réservation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #8a9e8a;
+    --sage-light: #b5c4b0;
+    --sage-pale: #d8e3d4;
+    --sage-bg: #eef3ec;
+    --cream: #f7f4ef;
+    --brown: #6b5b4e;
+    --text: #3a3530;
+    --text-light: #7a7068;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--sage-bg);
+    text-align: center;
+    padding: 40px 20px 30px;
+    border-bottom: 1px solid var(--sage-pale);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(138,158,138,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .logo-circle {
+    width: 90px; height: 90px;
+    background: white;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(138,158,138,0.3);
+    font-size: 36px;
+  }
+
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  header p {
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-top: 6px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* STEP INDICATOR */
+  .steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 40px;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 300;
+  }
+
+  .step.active { color: var(--sage); }
+  .step.done { color: var(--brown); }
+
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+  }
+
+  .step.active .step-num {
+    background: var(--sage);
+    color: white;
+    border-color: var(--sage);
+  }
+
+  .step.done .step-num {
+    background: var(--brown);
+    color: white;
+    border-color: var(--brown);
+  }
+
+  .step-line {
+    width: 40px;
+    height: 1px;
+    background: var(--sage-pale);
+    margin: 0 8px;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .section-sub {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    margin-bottom: 28px;
+  }
+
+  /* CATEGORY TABS */
+  .cat-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .cat-tab {
+    padding: 8px 20px;
+    border: 1px solid var(--sage-pale);
+    background: white;
+    border-radius: 40px;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-light);
+    font-family: 'Jost', sans-serif;
+  }
+
+  .cat-tab:hover { border-color: var(--sage); color: var(--sage); }
+  .cat-tab.active {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+
+  /* SERVICE GRID */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+
+  .service-card {
+    background: white;
+    border: 1.5px solid var(--sage-pale);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.22s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sage-light), var(--sage));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .service-card:hover {
+    border-color: var(--sage);
+    box-shadow: 0 4px 20px rgba(138,158,138,0.15);
+    transform: translateY(-2px);
+  }
+
+  .service-card:hover::before { opacity: 1; }
+
+  .service-card.selected {
+    border-color: var(--sage);
+    background: var(--sage-bg);
+    box-shadow: 0 4px 20px rgba(138,158,138,0.2);
+  }
+
+  .service-card.selected::before { opacity: 1; }
+
+  .service-badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .service-duration {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 300;
+    margin-bottom: 10px;
+  }
+
+  .service-price {
+    font-size: 1.2rem;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--brown);
+    font-weight: 600;
+  }
+
+  .service-check {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--sage);
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .service-card.selected .service-check { display: flex; }
+
+  /* FORFAIT TAG */
+  .forfait-tag {
+    display: inline-block;
+    background: var(--sage-pale);
+    color: var(--sage);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+
+  /* FORM */
+  .form-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .form-section.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 560px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 400;
+  }
+
+  input:not([type="checkbox"]), select, textarea {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--text);
+    background: white;
+    border: 1px solid var(--sage-pale);
+    border-radius: 8px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  input[type="checkbox"] {
+    appearance: auto;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--sage);
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--sage);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* DATE TIME PICKER */
+  .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .time-slot {
+    padding: 8px 16px;
+    border: 1px solid var(--sage-pale);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    background: white;
+    color: var(--text);
+    transition: all 0.15s;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .time-slot:hover { border-color: var(--sage); color: var(--sage); }
+  .time-slot.selected { background: var(--sage); border-color: var(--sage); color: white; }
+  .time-slot.unavailable { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
+
+  /* SUMMARY CARD */
+  .summary-card {
+    background: var(--sage-bg);
+    border: 1px solid var(--sage-pale);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--sage-pale);
+    font-size: 0.88rem;
+  }
+
+  .summary-row:last-child { border-bottom: none; }
+
+  .summary-label { color: var(--text-light); font-weight: 300; }
+  .summary-value { color: var(--text); font-weight: 400; }
+
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+  }
+
+  .summary-total .val { color: var(--brown); font-weight: 600; }
+
+  /* BUTTONS */
+  .btn-primary {
+    background: var(--sage);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 40px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: var(--brown);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(107,91,78,0.25);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--sage-pale);
+    border-radius: 50px;
+    padding: 13px 30px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--sage); color: var(--sage); }
+
+  .btn-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .success-screen.visible { display: block; }
+
+  .success-icon {
+    width: 80px; height: 80px;
+    background: var(--sage-bg);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 36px;
+    border: 2px solid var(--sage-pale);
+  }
+
+  .success-screen h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+
+  .success-screen p {
+    color: var(--text-light);
+    font-weight: 300;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    max-width: 400px;
+    margin: 0 auto 30px;
+  }
+
+  .confirm-box {
+    background: var(--sage-bg);
+    border: 1px solid var(--sage-pale);
+    border-radius: 14px;
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto 30px;
+    text-align: left;
+    font-size: 0.85rem;
+    line-height: 2;
+  }
+
+  .confirm-box strong {
+    color: var(--sage);
+    font-weight: 500;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid var(--sage-pale);
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    background: var(--sage-bg);
+  }
+
+  footer a { color: var(--sage); text-decoration: none; }
+
+  /* SELECTED SERVICE BANNER */
+  .selected-banner {
+    display: none;
+    background: white;
+    border: 1px solid var(--sage);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .selected-banner.visible { display: flex; }
+
+  .selected-banner-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+  }
+
+  .selected-banner-price {
+    color: var(--brown);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .selected-banner-change {
+    font-size: 0.72rem;
+    color: var(--sage);
+    cursor: pointer;
+    text-decoration: underline;
+    letter-spacing: 0.05em;
+    background: none;
+    border: none;
+    font-family: 'Jost', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-circle">🌿</div>
+  <h1>Cocoon by Sabrina</h1>
+  <p>Massage bien-être &amp; Madérothérapie · 13010 Marseille</p>
+</header>
+
+<main>
+  <!-- STEPS -->
+  <div class="steps">
+    <div class="step active" id="step1-ind">
+      <div class="step-num">1</div>
+      <span>Prestation</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step2-ind">
+      <div class="step-num">2</div>
+      <span>Date &amp; heure</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step3-ind">
+      <div class="step-num">3</div>
+      <span>Confirmation</span>
+    </div>
+  </div>
+
+  <!-- STEP 1: PRESTATION -->
+  <div id="step1" class="form-section visible">
+    <h2 class="section-title">Choisissez votre prestation</h2>
+    <p class="section-sub">Séances à l'unité et forfaits disponibles</p>
+
+    <div class="cat-tabs">
+      <button class="cat-tab active" onclick="filterCat('all', this)">Tout voir</button>
+      <button class="cat-tab" onclick="filterCat('madero', this)">Madérothérapie</button>
+      <button class="cat-tab" onclick="filterCat('massage', this)">Massage bien-être</button>
+      <button class="cat-tab" onclick="filterCat('forfait', this)">Forfaits</button>
+    </div>
+
+    <div class="services-grid" id="services-grid">
+
+      <!-- MADEROTHERAPIE unité -->
+      <div class="service-card" data-cat="madero" data-name="Jambes complètes – Madérothérapie" data-price="55" data-duration="1h" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">Jambes complètes</div>
+        <div class="service-duration">⏱ 1 heure · jambes + fesses</div>
+        <div class="service-price">55 €</div>
+      </div>
+
+      <div class="service-card" data-cat="madero" data-name="Bras – Madérothérapie" data-price="55" data-duration="1h" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">Bras</div>
+        <div class="service-duration">⏱ 1 heure</div>
+        <div class="service-price">55 €</div>
+      </div>
+
+      <div class="service-card" data-cat="madero" data-name="Ventre – Madérothérapie" data-price="55" data-duration="1h" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">Ventre</div>
+        <div class="service-duration">⏱ 1 heure</div>
+        <div class="service-price">55 €</div>
+      </div>
+
+      <div class="service-card" data-cat="madero" data-name="Dos – Madérothérapie" data-price="55" data-duration="1h" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">Dos</div>
+        <div class="service-duration">⏱ 1 heure</div>
+        <div class="service-price">55 €</div>
+      </div>
+
+      <div class="service-card" data-cat="madero" data-name="Corps complet – Madérothérapie" data-price="150" data-duration="1h45" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">Corps complet</div>
+        <div class="service-duration">⏱ 1h45</div>
+        <div class="service-price">150 €</div>
+      </div>
+
+      <!-- MASSAGE unité -->
+      <div class="service-card" data-cat="massage" data-name="Dos complet – Massage bien-être" data-price="45" data-duration="1h" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Massage bien-être</div>
+        <div class="service-name">Dos complet</div>
+        <div class="service-duration">⏱ 1 heure</div>
+        <div class="service-price">45 €</div>
+      </div>
+
+      <div class="service-card" data-cat="massage" data-name="Corps complet – Massage bien-être" data-price="45" data-duration="1h" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Massage bien-être</div>
+        <div class="service-name">Corps complet</div>
+        <div class="service-duration">⏱ 1 heure · dos + jambes</div>
+        <div class="service-price">45 €</div>
+      </div>
+
+      <div class="service-card" data-cat="massage" data-name="Visage – Massage bien-être" data-price="30" data-duration="45min" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Massage bien-être</div>
+        <div class="service-name">Visage</div>
+        <div class="service-duration">⏱ 45 minutes</div>
+        <div class="service-price">30 €</div>
+      </div>
+
+      <div class="service-card" data-cat="massage" data-name="Cuir chevelu – Massage bien-être" data-price="30" data-duration="45min" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="service-badge">Massage bien-être</div>
+        <div class="service-name">Cuir chevelu</div>
+        <div class="service-duration">⏱ 45 minutes</div>
+        <div class="service-price">30 €</div>
+      </div>
+
+      <!-- FORFAITS Madero -->
+      <div class="service-card" data-cat="forfait" data-name="Forfait 5 séances – Zone ciblée (Madérothérapie)" data-price="240" data-duration="5 séances" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="forfait-tag">Forfait · Économie 35 €</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">5 séances · Zone ciblée</div>
+        <div class="service-duration">📅 À planifier ensemble</div>
+        <div class="service-price">240 €</div>
+      </div>
+
+      <div class="service-card" data-cat="forfait" data-name="Forfait 10 séances – Zone ciblée (Madérothérapie)" data-price="475" data-duration="10 séances" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="forfait-tag">Forfait · Économie 75 €</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">10 séances · Zone ciblée</div>
+        <div class="service-duration">📅 À planifier ensemble</div>
+        <div class="service-price">475 €</div>
+      </div>
+
+      <div class="service-card" data-cat="forfait" data-name="Forfait 5 séances – Corps complet (Madérothérapie)" data-price="670" data-duration="5 séances" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="forfait-tag">Forfait · Économie 80 €</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">5 séances · Corps complet</div>
+        <div class="service-duration">📅 À planifier ensemble</div>
+        <div class="service-price">670 €</div>
+      </div>
+
+      <div class="service-card" data-cat="forfait" data-name="Forfait 10 séances – Corps complet (Madérothérapie)" data-price="1340" data-duration="10 séances" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="forfait-tag">Forfait · Économie 160 €</div>
+        <div class="service-badge">Madérothérapie</div>
+        <div class="service-name">10 séances · Corps complet</div>
+        <div class="service-duration">📅 À planifier ensemble</div>
+        <div class="service-price">1 340 €</div>
+      </div>
+
+      <!-- FORFAITS Massage -->
+      <div class="service-card" data-cat="forfait" data-name="Forfait 5 séances – Dos complet (Massage)" data-price="180" data-duration="5 séances" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="forfait-tag">Forfait · Économie 45 €</div>
+        <div class="service-badge">Massage bien-être</div>
+        <div class="service-name">5 séances · Dos complet</div>
+        <div class="service-duration">📅 À planifier ensemble</div>
+        <div class="service-price">180 €</div>
+      </div>
+
+      <div class="service-card" data-cat="forfait" data-name="Forfait 5 séances – Corps complet (Massage)" data-price="180" data-duration="5 séances" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div class="forfait-tag">Forfait · Économie 45 €</div>
+        <div class="service-badge">Massage bien-être</div>
+        <div class="service-name">5 séances · Corps complet</div>
+        <div class="service-duration">📅 À planifier ensemble</div>
+        <div class="service-price">180 €</div>
+      </div>
+
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" onclick="goToStep2()">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: DATE & HEURE -->
+  <div id="step2" class="form-section">
+    <div class="selected-banner visible" id="selected-banner">
+      <div>
+        <div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:2px;">Prestation sélectionnée</div>
+        <div class="selected-banner-name" id="banner-name">–</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="selected-banner-price" id="banner-price">–</span>
+        <button class="selected-banner-change" onclick="goToStep1()">Modifier</button>
+      </div>
+    </div>
+
+    <h2 class="section-title">Choisissez une date</h2>
+    <p class="section-sub">13010 Marseille · Le lieu exact vous sera communiqué par Sabrina</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Date souhaitée</label>
+        <input type="date" id="rdv-date" onchange="generateSlots()" min="">
+      </div>
+      <div class="form-group">
+        <label>Votre prénom &amp; nom</label>
+        <input type="text" id="rdv-nom" placeholder="Sophie Marchand">
+      </div>
+      <div class="form-group">
+        <label>Téléphone</label>
+        <input type="tel" id="rdv-tel" placeholder="07 81 02 01 29">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="rdv-email" placeholder="votre@email.fr">
+      </div>
+      <div class="form-group full">
+        <label>Note (optionnel)</label>
+        <textarea id="rdv-note" placeholder="Zones sensibles, première fois, contre-indications…"></textarea>
+      </div>
+      <div class="form-group full" style="flex-direction:row;align-items:flex-start;gap:10px;margin-top:4px;">
+        <input type="checkbox" id="rgpd-check" style="margin-top:3px;width:16px;height:16px;accent-color:var(--sage);flex-shrink:0;cursor:pointer;pointer-events:auto;">
+        <label for="rgpd-check" style="font-size:0.75rem;text-transform:none;letter-spacing:0;line-height:1.6;cursor:pointer;">
+          J'accepte que mes données (nom, téléphone, email) soient utilisées uniquement pour la gestion de mon rendez-vous, conformément au <a href="#" onclick="openModal('rgpd');return false;" style="color:var(--sage);">RGPD</a>. Voir nos <a href="#" onclick="openModal('mentions');return false;" style="color:var(--sage);">mentions légales</a> et <a href="#" onclick="openModal('cgv');return false;" style="color:var(--sage);">CGV</a>.
+        </label>
+      </div>
+    </div>
+
+    <div id="slots-section" style="display:none;margin-bottom:24px;">
+      <label style="display:block;margin-bottom:10px;">Heure souhaitée</label>
+      <div class="time-slots" id="time-slots"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goToStep1()">← Retour</button>
+      <button class="btn-primary" onclick="goToStep3()">Confirmer →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: CONFIRMATION -->
+  <div id="step3" class="form-section">
+    <h2 class="section-title">Récapitulatif</h2>
+    <p class="section-sub">Vérifiez vos informations avant de valider</p>
+
+    <div class="summary-card">
+      <div class="summary-row">
+        <span class="summary-label">Prestation</span>
+        <span class="summary-value" id="recap-service">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Durée</span>
+        <span class="summary-value" id="recap-duration">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Date &amp; heure</span>
+        <span class="summary-value" id="recap-datetime">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Lieu</span>
+        <span class="summary-value">13010 Marseille (lieu communiqué par Sabrina)</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Client(e)</span>
+        <span class="summary-value" id="recap-nom">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Téléphone</span>
+        <span class="summary-value" id="recap-tel">–</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Email</span>
+        <span class="summary-value" id="recap-email">–</span>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <span class="val" id="recap-price">–</span>
+      </div>
+    </div>
+
+    <p style="font-size:0.78rem;color:var(--text-light);font-weight:300;margin-bottom:20px;line-height:1.8;">
+      En validant, votre demande de rendez-vous sera envoyée à Sabrina qui confirmera par SMS ou appel. 💵 <strong>Paiement uniquement en espèces, sur place.</strong>
+    </p>
+
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goToStep2()">← Retour</button>
+      <button class="btn-primary" onclick="submitRdv()">✓ Valider ma réservation</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="success" class="success-screen">
+    <div class="success-icon">🌿</div>
+    <h2>Demande envoyée !</h2>
+    <p>Sabrina vous contactera sous 24h pour confirmer votre rendez-vous. À très bientôt.</p>
+    <div class="confirm-box" id="confirm-box"></div>
+    <button class="btn-primary" onclick="resetApp()">Prendre un autre rendez-vous</button>
+  </div>
+</main>
+
+<footer>
+  <strong>Cocoon by Sabrina</strong> · 13010 Marseille<br>
+  <a href="tel:0781020129">07 81 02 01 29</a> · @cocoonbysabrina<br>
+  <span style="margin-top:8px;display:inline-block;">
+    <a href="#" onclick="openModal('mentions');return false;">Mentions légales</a> ·
+    <a href="#" onclick="openModal('rgpd');return false;">Politique de confidentialité</a> ·
+    <a href="#" onclick="openModal('cgv');return false;">CGV</a>
+  </span>
+</footer>
+
+<!-- MODAL -->
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center;padding:20px;" onclick="closeModal(event)">
+  <div id="modal-box" style="background:var(--cream);border-radius:16px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:36px;position:relative;">
+    <button onclick="closeModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-light);">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+  // ── Supabase ──────────────────────────────────
+  const SUPA_URL = 'https://xeppltfchebiheejrfeo.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlcHBsdGZjaGViaWhlZWpyZmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MDA4MzUsImV4cCI6MjA5MzM3NjgzNX0.ULTwS8YrlY9AlMNpUo0wrhMSDy2fIsZ_Zxj5IUdXMPc';
+
+  async function insertRdv(data) {
+    const res = await fetch(`${SUPA_URL}/rest/v1/rdv`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error(await res.text());
+  }
+  // ─────────────────────────────────────────────
+
+  let selectedCard = null;
+  let selectedSlot = null;
+
+  // Set min date to today
+  const today = new Date();
+  // Afficher toutes les cartes au démarrage
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.service-card').forEach(c => c.style.display = '');
+  });
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const dd = String(today.getDate()).padStart(2,'0');
+  document.getElementById('rdv-date').min = `${yyyy}-${mm}-${dd}`;
+
+  function filterCat(cat, btn) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.service-card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  function selectService(card) {
+    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedCard = card;
+  }
+
+  function goToStep1() {
+    showStep('step1');
+    setStepIndicator(1);
+  }
+
+  function goToStep2() {
+    if (!selectedCard) {
+      alert('Veuillez sélectionner une prestation.');
+      return;
+    }
+    document.getElementById('banner-name').textContent = selectedCard.dataset.name;
+    document.getElementById('banner-price').textContent = parseInt(selectedCard.dataset.price).toLocaleString('fr-FR') + ' €';
+    showStep('step2');
+    setStepIndicator(2);
+    selectedSlot = null;
+  }
+
+  const modals = {
+    mentions: `
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:16px;">Mentions légales</h2>
+      <p style="font-size:0.82rem;line-height:1.9;color:var(--text);">
+        <strong>Responsable du site :</strong> Sabrina Valiente<br>
+        <strong>Activité :</strong> Praticienne en massage bien-être et madérothérapie<br>
+        <strong>Adresse :</strong> 13010 Marseille<br>
+        <strong>Téléphone :</strong> 07 81 02 01 29<br>
+        <strong>SIRET :</strong> 103440076800018<br>
+        <strong>Statut :</strong> Auto-entrepreneur / Auto-entrepreneur<br><br>
+        Ce site a pour objet la prise de rendez-vous en ligne pour les prestations proposées par Cocoon by Sabrina. Toute reproduction totale ou partielle est interdite sans autorisation préalable.
+      </p>`,
+    rgpd: `
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:16px;">Politique de confidentialité</h2>
+      <p style="font-size:0.82rem;line-height:1.9;color:var(--text);">
+        Conformément au Règlement Général sur la Protection des Données (RGPD – UE 2016/679) :<br><br>
+        <strong>Données collectées :</strong> nom, prénom, numéro de téléphone, adresse email, notes éventuelles.<br><br>
+        <strong>Finalité :</strong> Ces données sont collectées uniquement pour la gestion et la confirmation de vos rendez-vous.<br><br>
+        <strong>Conservation :</strong> Vos données sont conservées pendant une durée maximale de 2 ans à compter du dernier rendez-vous.<br><br>
+        <strong>Vos droits :</strong> Vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez : 07 81 02 01 29.<br><br>
+        <strong>Partage :</strong> Vos données ne sont ni vendues, ni transmises à des tiers.<br><br>
+        Responsable du traitement : Sabrina Valiente, 13010 Marseille.
+      </p>`,
+    cgv: `
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:16px;">Conditions Générales de Vente</h2>
+      <p style="font-size:0.82rem;line-height:1.9;color:var(--text);">
+        <strong>1. Réservation</strong><br>
+        Toute réservation effectuée via ce site constitue une demande de rendez-vous. Elle est confirmée uniquement après contact de Sabrina par SMS ou téléphone.<br><br>
+        <strong>2. Paiement</strong><br>
+        Le règlement s'effectue exclusivement sur place, <strong>en espèces uniquement</strong>. Aucun paiement en ligne ou par carte n'est accepté.<br><br>
+        <strong>3. Annulation et report</strong><br>
+        Toute annulation doit être signalée au moins <strong>24h à l'avance</strong> par téléphone ou SMS au 07 81 02 01 29.<br>
+        En cas d'annulation sans préavis, une séance du forfait pourra être décomptée.<br><br>
+        <strong>4. Forfaits</strong><br>
+        Les forfaits multi-séances sont valables 6 mois à compter de la date d'achat. Ils sont non remboursables sauf contre-indication médicale justifiée.<br><br>
+        <strong>5. Responsabilité</strong><br>
+        Le client s'engage à informer la praticienne de tout état de santé particulier ou contre-indication avant la séance. Cocoon by Sabrina ne saurait être tenu responsable en cas d'informations incomplètes.
+      </p>`
+  };
+
+  function openModal(type) {
+    document.getElementById('modal-content').innerHTML = modals[type];
+    const overlay = document.getElementById('modal-overlay');
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(e) {
+    if (e && e.target !== document.getElementById('modal-overlay') && e.type !== 'click') return;
+    if (e && e.currentTarget === document.getElementById('modal-overlay') && e.target !== e.currentTarget) return;
+    document.getElementById('modal-overlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function goToStep3() {
+    const date = document.getElementById('rdv-date').value;
+    const nom = document.getElementById('rdv-nom').value.trim();
+    const tel = document.getElementById('rdv-tel').value.trim();
+    const email = document.getElementById('rdv-email').value.trim();
+    const rgpd = document.getElementById('rgpd-check').checked;
+
+    if (!date) { alert('Veuillez choisir une date.'); return; }
+    if (!selectedSlot) { alert('Veuillez choisir un créneau horaire.'); return; }
+    if (!nom) { alert('Veuillez entrer votre nom.'); return; }
+    if (!tel) { alert('Veuillez entrer votre téléphone.'); return; }
+    if (!rgpd) { alert('Veuillez accepter la politique de confidentialité pour continuer.'); return; }
+
+    // Recap
+    const dateObj = new Date(date + 'T00:00:00');
+    const dateStr = dateObj.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    document.getElementById('recap-service').textContent = selectedCard.dataset.name;
+    document.getElementById('recap-duration').textContent = selectedCard.dataset.duration;
+    document.getElementById('recap-datetime').textContent = dateStr + ' à ' + selectedSlot;
+    document.getElementById('recap-nom').textContent = nom;
+    document.getElementById('recap-tel').textContent = tel;
+    document.getElementById('recap-email').textContent = email || 'Non renseigné';
+    document.getElementById('recap-price').textContent = parseInt(selectedCard.dataset.price).toLocaleString('fr-FR') + ' €';
+
+    showStep('step3');
+    setStepIndicator(3);
+  }
+
+  let isSubmitting = false;
+
+  async function submitRdv() {
+    if (isSubmitting) return;
+    isSubmitting = true;
+
+    const nom = document.getElementById('rdv-nom').value.trim();
+    const tel = document.getElementById('rdv-tel').value.trim();
+    const email = document.getElementById('rdv-email').value.trim();
+    const note = document.getElementById('rdv-note').value.trim();
+    const date = document.getElementById('rdv-date').value;
+    const rgpd = document.getElementById('rgpd-check').checked;
+    if (!rgpd) { isSubmitting = false; alert('Veuillez accepter la politique de confidentialité.'); return; }
+    const dateObj = new Date(date + 'T00:00:00');
+    const dateStr = dateObj.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    const btn = document.querySelector('#step3 .btn-primary');
+    btn.textContent = 'Enregistrement…';
+    btn.disabled = true;
+
+    try {
+      await insertRdv({
+        nom,
+        tel,
+        email: email || null,
+        service: selectedCard.dataset.name,
+        prix: parseInt(selectedCard.dataset.price),
+        duree: selectedCard.dataset.duration,
+        date,
+        heure: selectedSlot,
+        note: note || null,
+        statut: 'en_attente'
+      });
+
+      // Ajouter au Google Calendar
+      try {
+        await fetch('/api/calendar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nom, tel,
+            service: selectedCard.dataset.name,
+            duree: selectedCard.dataset.duration,
+            date, heure: selectedSlot
+          })
+        });
+      } catch(calErr) {
+        console.warn('Calendar error (non-blocking):', calErr);
+      }
+
+      document.getElementById('confirm-box').innerHTML = `
+        <strong>Prestation :</strong> ${selectedCard.dataset.name}<br>
+        <strong>Date :</strong> ${dateStr} à ${selectedSlot}<br>
+        <strong>Lieu :</strong> 13010 Marseille (communiqué par Sabrina)<br>
+        <strong>Client(e) :</strong> ${nom}
+      `;
+
+      document.getElementById('step3').classList.remove('visible');
+      document.getElementById('success').classList.add('visible');
+      document.querySelector('.steps').style.display = 'none';
+
+    } catch(err) {
+      isSubmitting = false;
+      btn.textContent = '✓ Valider ma réservation';
+      btn.disabled = false;
+      alert('Une erreur est survenue. Veuillez réessayer ou appeler le 07 81 02 01 29.');
+      console.error(err);
+    }
+  }
+
+  function resetApp() {
+    selectedCard = null;
+    selectedSlot = null;
+    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('rdv-date').value = '';
+    document.getElementById('rdv-nom').value = '';
+    document.getElementById('rdv-tel').value = '';
+    document.getElementById('rdv-email').value = '';
+    document.getElementById('rdv-note').value = '';
+    document.getElementById('slots-section').style.display = 'none';
+    document.getElementById('success').classList.remove('visible');
+    document.querySelector('.steps').style.display = 'flex';
+    showStep('step1');
+    setStepIndicator(1);
+  }
+
+  function showStep(id) {
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('visible'));
+    document.getElementById(id).classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setStepIndicator(n) {
+    for (let i = 1; i <= 3; i++) {
+      const el = document.getElementById(`step${i}-ind`);
+      el.classList.remove('active', 'done');
+      if (i < n) el.classList.add('done');
+      else if (i === n) el.classList.add('active');
+    }
+  }
+
+  async function generateSlots() {
+    const date = document.getElementById('rdv-date').value;
+    if (!date) return;
+
+    const dateObj = new Date(date + 'T00:00:00');
+    const day = dateObj.getDay(); // 0=dim, 1=lun, 2=mar, 3=mer, 4=jeu, 5=ven, 6=sam
+
+    // Créneaux matin et après-midi
+    const morningSlots = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00'];
+    const afternoonSlots = ['14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00'];
+
+    // Règles horaires
+    // Lundi(1), Mardi(2), Mercredi(3) : matin seulement
+    // Jeudi(4), Vendredi(5), Samedi(6), Dimanche(0) : toute la journée
+    let availableSlots = [];
+    if ([1, 2, 3].includes(day)) {
+      availableSlots = morningSlots;
+    } else {
+      availableSlots = [...morningSlots, ...afternoonSlots];
+    }
+
+    const container = document.getElementById('time-slots');
+    container.innerHTML = '<span style="color:var(--text-light);font-size:0.78rem;">Chargement des disponibilités…</span>';
+    selectedSlot = null;
+    document.getElementById('slots-section').style.display = 'block';
+
+    // Récupérer les RDV déjà pris ce jour depuis Supabase (sauf annulés)
+    let blockedSlots = new Set();
+    try {
+      const res = await fetch(`${SUPA_URL}/rest/v1/rdv?date=eq.${date}&statut=neq.annule&select=heure,duree`, {
+        headers: {
+          'apikey': SUPA_KEY,
+          'Authorization': `Bearer ${SUPA_KEY}`
+        }
+      });
+      const data = await res.json();
+
+      const durationMap = {
+        '45min': 45, '1h': 60, '1h45': 105, '1H45': 105,
+        '45MIN': 45, '1H': 60,
+        '5 séances': 60, '10 séances': 60
+      };
+
+      // Pour chaque RDV, bloquer le créneau + tous les créneaux couverts par la durée
+      data.forEach(rdv => {
+        const [h, m] = rdv.heure.split(':').map(Number);
+        const startMin = h * 60 + m;
+        const duration = durationMap[rdv.duree] || 60;
+        const endMin = startMin + duration;
+
+        // Bloquer tous les créneaux qui se chevauchent avec ce RDV
+        const allSlots = [...morningSlots, ...afternoonSlots];
+        allSlots.forEach(slot => {
+          const [sh, sm] = slot.split(':').map(Number);
+          const slotMin = sh * 60 + sm;
+          // Bloquer si le début du créneau est avant la fin du RDV
+          // ET si le créneau commence en même temps ou après le début du RDV
+          if (slotMin >= startMin && slotMin < endMin) {
+            blockedSlots.add(slot);
+          }
+        });
+      });
+
+      // Vérifier aussi dans l'autre sens : si la durée du nouveau RDV chevauche un RDV existant
+      // On stocke aussi les RDV pour vérification lors de la sélection
+      window._existingRdv = data.map(rdv => ({
+        startMin: rdv.heure.split(':').map(Number).reduce((h, m) => h * 60 + m),
+        duration: durationMap[rdv.duree] || 60
+      }));
+
+    } catch(e) {
+      console.warn('Impossible de charger les disponibilités', e);
+      window._existingRdv = [];
+    }
+
+    const selectedDuration = selectedCard ? (
+      {'45min':45,'1h':60,'1h45':105,'1H45':105,'45MIN':45,'1H':60,'5 séances':60,'10 séances':60}[selectedCard.dataset.duration] || 60
+    ) : 60;
+
+    container.innerHTML = '';
+
+    const now = new Date();
+    const isToday = date === `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const currentMin = now.getHours() * 60 + now.getMinutes();
+
+    availableSlots.forEach(s => {
+      const [sh, sm] = s.split(':').map(Number);
+      const slotMin = sh * 60 + sm;
+
+      // Bloqué si dans le passé OU moins de 2h dans le futur (aujourd'hui uniquement)
+      const isPast = isToday && slotMin <= currentMin + 120;
+
+      // Bloqué si couvert par un RDV existant
+      let isTaken = blockedSlots.has(s) || isPast;
+
+      // Bloqué si la durée du nouveau RDV chevauche un RDV existant
+      if (!isTaken && window._existingRdv) {
+        const newEnd = slotMin + selectedDuration;
+        isTaken = window._existingRdv.some(existing =>
+          slotMin < existing.startMin + existing.duration &&
+          newEnd > existing.startMin
+        );
+      }
+
+      const btn = document.createElement('button');
+      btn.className = 'time-slot' + (isTaken ? ' unavailable' : '');
+      btn.textContent = s;
+      btn.disabled = isTaken;
+      if (!isTaken) {
+        btn.onclick = () => {
+          document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedSlot = s;
+        };
+      }
+      container.appendChild(btn);
+    });
+  }
+</script>
+</body>
+</html>
