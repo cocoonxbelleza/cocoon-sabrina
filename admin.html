@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cocoon by Sabrina – Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #8a9e8a;
+    --sage-light: #b5c4b0;
+    --sage-pale: #d8e3d4;
+    --sage-bg: #eef3ec;
+    --cream: #f7f4ef;
+    --brown: #6b5b4e;
+    --text: #3a3530;
+    --text-light: #7a7068;
+    --red: #c0392b;
+    --green: #27ae60;
+    --orange: #e67e22;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* LOGIN */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--sage-bg);
+  }
+
+  .login-box {
+    background: white;
+    border-radius: 16px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 8px 40px rgba(138,158,138,0.2);
+    text-align: center;
+  }
+
+  .login-logo {
+    width: 70px; height: 70px;
+    background: var(--sage-bg);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 28px;
+    border: 2px solid var(--sage-pale);
+  }
+
+  .login-box h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: 300;
+    margin-bottom: 6px;
+  }
+
+  .login-box p {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--sage-pale);
+    border-radius: 8px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .login-input:focus { border-color: var(--sage); }
+
+  .login-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--sage);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .login-btn:hover { background: var(--brown); }
+
+  .login-error {
+    color: var(--red);
+    font-size: 0.78rem;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* DASHBOARD */
+  #dashboard { display: none; }
+
+  header {
+    background: white;
+    border-bottom: 1px solid var(--sage-pale);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-left h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .header-left span {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logout-btn {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--sage-pale);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .logout-btn:hover { border-color: var(--sage); color: var(--sage); }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    padding: 28px 32px 0;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid var(--sage-pale);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .stat-sub {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* FILTERS */
+  .filters {
+    display: flex;
+    gap: 10px;
+    padding: 24px 32px 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-btn {
+    padding: 7px 18px;
+    border: 1px solid var(--sage-pale);
+    background: white;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-light);
+    font-family: 'Jost', sans-serif;
+  }
+
+  .filter-btn:hover { border-color: var(--sage); color: var(--sage); }
+  .filter-btn.active { background: var(--sage); border-color: var(--sage); color: white; }
+
+  .search-input {
+    padding: 8px 16px;
+    border: 1px solid var(--sage-pale);
+    border-radius: 40px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    outline: none;
+    width: 220px;
+    transition: border-color 0.2s;
+  }
+
+  .search-input:focus { border-color: var(--sage); }
+
+  /* TABLE */
+  .table-container {
+    padding: 0 32px 40px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--sage-pale);
+  }
+
+  thead {
+    background: var(--sage-bg);
+  }
+
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 400;
+    border-bottom: 1px solid var(--sage-pale);
+  }
+
+  td {
+    padding: 14px 16px;
+    font-size: 0.84rem;
+    border-bottom: 1px solid var(--sage-pale);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--sage-bg); }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .badge-attente { background: #fef9e7; color: var(--orange); }
+  .badge-confirme { background: #eafaf1; color: var(--green); }
+  .badge-annule { background: #fdf2f2; color: var(--red); }
+
+  .action-btn {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    border: 1px solid;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.15s;
+    margin-right: 4px;
+  }
+
+  .btn-confirm { border-color: var(--green); color: var(--green); background: white; }
+  .btn-confirm:hover { background: var(--green); color: white; }
+  .btn-cancel { border-color: var(--red); color: var(--red); background: white; }
+  .btn-cancel:hover { background: var(--red); color: white; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+  }
+
+  .empty-state p { font-size: 0.85rem; margin-top: 8px; }
+
+  .refresh-btn {
+    background: var(--sage-bg);
+    border: 1px solid var(--sage-pale);
+    border-radius: 50px;
+    padding: 7px 18px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover { border-color: var(--sage); color: var(--sage); }
+
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🌿</div>
+    <h1>Cocoon by Sabrina</h1>
+    <p>Espace administration</p>
+    <input type="password" class="login-input" id="password-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">Accéder →</button>
+    <div class="login-error" id="login-error">Mot de passe incorrect.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <header>
+    <div class="header-left">
+      <h1>🌿 Cocoon by Sabrina</h1>
+      <span>Tableau de bord · Gestion des rendez-vous</span>
+    </div>
+    <div class="header-right">
+      <button class="refresh-btn" onclick="loadRdv()">↻ Actualiser</button>
+      <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total RDV</div>
+      <div class="stat-value" id="stat-total">–</div>
+      <div class="stat-sub">Toutes périodes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">En attente</div>
+      <div class="stat-value" id="stat-attente" style="color:var(--orange)">–</div>
+      <div class="stat-sub">À confirmer</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Confirmés</div>
+      <div class="stat-value" id="stat-confirme" style="color:var(--green)">–</div>
+      <div class="stat-sub">Cette semaine</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Chiffre d'affaires</div>
+      <div class="stat-value" id="stat-ca">–</div>
+      <div class="stat-sub">Total confirmés</div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterStatus('all', this)">Tous</button>
+    <button class="filter-btn" onclick="filterStatus('en_attente', this)">En attente</button>
+    <button class="filter-btn" onclick="filterStatus('confirme', this)">Confirmés</button>
+    <button class="filter-btn" onclick="filterStatus('annule', this)">Annulés</button>
+    <input type="text" class="search-input" id="search-input" placeholder="🔍 Rechercher un client..." oninput="filterSearch()">
+  </div>
+
+  <div class="table-container">
+    <div id="table-loading" class="loading">Chargement des rendez-vous…</div>
+    <table id="rdv-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>Date & Heure</th>
+          <th>Client</th>
+          <th>Téléphone</th>
+          <th>Prestation</th>
+          <th>Durée</th>
+          <th>Prix</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rdv-body"></tbody>
+    </table>
+    <div id="empty-state" class="empty-state" style="display:none;">
+      <div style="font-size:2rem;">🌿</div>
+      <p>Aucun rendez-vous trouvé.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPA_URL = 'https://xeppltfchebiheejrfeo.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlcHBsdGZjaGViaWhlZWpyZmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MDA4MzUsImV4cCI6MjA5MzM3NjgzNX0.ULTwS8YrlY9AlMNpUo0wrhMSDy2fIsZ_Zxj5IUdXMPc';
+  const ADMIN_PASSWORD = 'cocoon2026';
+
+  let allRdv = [];
+  let currentFilter = 'all';
+
+  function login() {
+    const pwd = document.getElementById('password-input').value;
+    if (pwd === ADMIN_PASSWORD) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadRdv();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  }
+
+  function logout() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('password-input').value = '';
+  }
+
+  async function loadRdv() {
+    document.getElementById('table-loading').style.display = 'block';
+    document.getElementById('rdv-table').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'none';
+
+    try {
+      const res = await fetch(`${SUPA_URL}/rest/v1/rdv?order=date.desc,heure.desc`, {
+        headers: {
+          'apikey': SUPA_KEY,
+          'Authorization': `Bearer ${SUPA_KEY}`
+        }
+      });
+      allRdv = await res.json();
+      updateStats();
+      renderTable(allRdv);
+    } catch(e) {
+      console.error(e);
+    }
+
+    document.getElementById('table-loading').style.display = 'none';
+  }
+
+  function updateStats() {
+    const total = allRdv.length;
+    const attente = allRdv.filter(r => r.statut === 'en_attente').length;
+    const confirme = allRdv.filter(r => r.statut === 'confirme').length;
+    const ca = allRdv.filter(r => r.statut === 'confirme').reduce((sum, r) => sum + (r.prix || 0), 0);
+
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-attente').textContent = attente;
+    document.getElementById('stat-confirme').textContent = confirme;
+    document.getElementById('stat-ca').textContent = ca.toLocaleString('fr-FR') + ' €';
+  }
+
+  function renderTable(rdvList) {
+    const tbody = document.getElementById('rdv-body');
+    tbody.innerHTML = '';
+
+    if (rdvList.length === 0) {
+      document.getElementById('rdv-table').style.display = 'none';
+      document.getElementById('empty-state').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('rdv-table').style.display = 'table';
+    document.getElementById('empty-state').style.display = 'none';
+
+    rdvList.forEach(rdv => {
+      const dateObj = new Date(rdv.date + 'T00:00:00');
+      const dateStr = dateObj.toLocaleDateString('fr-FR', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+
+      const badgeClass = rdv.statut === 'confirme' ? 'badge-confirme' : rdv.statut === 'annule' ? 'badge-annule' : 'badge-attente';
+      const badgeText = rdv.statut === 'confirme' ? 'Confirmé' : rdv.statut === 'annule' ? 'Annulé' : 'En attente';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${dateStr}</strong><br><span style="color:var(--text-light);font-size:0.78rem;">${rdv.heure}</span></td>
+        <td>${rdv.nom}<br><span style="color:var(--text-light);font-size:0.78rem;">${rdv.email || ''}</span></td>
+        <td><a href="tel:${rdv.tel}" style="color:var(--sage);text-decoration:none;">${rdv.tel}</a></td>
+        <td style="max-width:180px;font-size:0.8rem;">${rdv.service}</td>
+        <td>${rdv.duree || '–'}</td>
+        <td style="color:var(--brown);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;">${rdv.prix ? rdv.prix.toLocaleString('fr-FR') + ' €' : '–'}</td>
+        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+        <td>
+          ${rdv.statut !== 'confirme' && rdv.statut !== 'annule' ? `<button class="action-btn btn-confirm" onclick="updateStatus('${rdv.id}', 'confirme')">✓ Confirmer</button>` : ''}
+          ${rdv.statut !== 'annule' ? `<button class="action-btn btn-cancel" onclick="updateStatus('${rdv.id}', 'annule')">✗ Annuler</button>` : ''}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function updateStatus(id, statut) {
+    try {
+      const rdv = allRdv.find(r => r.id === id);
+
+      // Si confirmation → envoyer email au client
+      if (statut === 'confirme' && rdv && rdv.email) {
+        try {
+          await fetch('/api/send-confirmation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nom: rdv.nom,
+              email: rdv.email,
+              service: rdv.service,
+              date: rdv.date,
+              heure: rdv.heure,
+              duree: rdv.duree,
+              prix: rdv.prix
+            })
+          });
+        } catch(mailErr) {
+          console.warn('Erreur envoi email:', mailErr);
+        }
+      }
+
+      // Si annulation → supprimer du Google Agenda
+      if (statut === 'annule' && rdv) {
+        try {
+          await fetch('/api/cancel-calendar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nom: rdv.nom,
+              service: rdv.service,
+              date: rdv.date,
+              heure: rdv.heure
+            })
+          });
+        } catch(calErr) {
+          console.warn('Erreur suppression agenda:', calErr);
+        }
+      }
+
+      await fetch(`${SUPA_URL}/rest/v1/rdv?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPA_KEY,
+          'Authorization': `Bearer ${SUPA_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ statut })
+      });
+      await loadRdv();
+    } catch(e) {
+      alert('Erreur lors de la mise à jour.');
+    }
+  }
+
+  function filterStatus(status, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = status;
+    applyFilters();
+  }
+
+  function filterSearch() {
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const search = document.getElementById('search-input').value.toLowerCase();
+    let filtered = allRdv;
+
+    if (currentFilter !== 'all') {
+      filtered = filtered.filter(r => r.statut === currentFilter);
+    }
+
+    if (search) {
+      filtered = filtered.filter(r =>
+        r.nom.toLowerCase().includes(search) ||
+        r.tel.includes(search) ||
+        r.service.toLowerCase().includes(search)
+      );
+    }
+
+    renderTable(filtered);
+  }
+</script>
+</body>
+</html>
